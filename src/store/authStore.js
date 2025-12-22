@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import api from "../lib/axios";
@@ -8,10 +9,12 @@ export const useAuthStore = create(
       user: null,
       isAuthenticated: false,
       isLoading: false,
-      error: null,
 
-      login: async (email, password) => {
+      login: async (formData) => {
         set({ isLoading: true, error: null });
+
+        const email = formData.get("email");
+        const password = formData.get("password");
         try {
           const res = await api.post("/auth/login", { email, password });
           if (res.data.success) {
@@ -19,10 +22,12 @@ export const useAuthStore = create(
               user: res.data.user,
               isAuthenticated: true,
             });
+            toast.success("Connexion réussie !", { id: "Login success" });
+            return res.data;
           }
         } catch (error) {
-          set({
-            error: error.response?.data?.message,
+          toast.error(error.response?.data?.message || "Erreur de connexion", {
+            id: "Login error",
           });
         } finally {
           set({
@@ -36,7 +41,12 @@ export const useAuthStore = create(
           await api.post("/auth/logout");
           set({ user: null, isAuthenticated: false });
         } catch (error) {
-          console.error("Logout error:", error);
+          toast.error(
+            error.response?.data?.message || "Erreur lors du deconnexion",
+            {
+              id: "logout error",
+            }
+          );
         }
       },
 
@@ -51,7 +61,9 @@ export const useAuthStore = create(
           set({
             user: null,
             isAuthenticated: false,
-            error: error.response?.data?.message,
+          });
+          toast.error(error.response?.data?.message || "Erreur de connexion", {
+            id: "getProlif error",
           });
         } finally {
           set({ isLoading: false });
