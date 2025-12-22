@@ -1,22 +1,23 @@
-import { ArrowLeft, Lock, LogIn, Mail } from "lucide-react";
-import { useEffect } from "react";
+import {Lock, LogIn, Mail } from "lucide-react";
 import { LoaderIcon } from "react-hot-toast";
-import { Link, useNavigate } from "react-router";
 import logo from "../assets/logo.webp";
 import { useAuthStore } from "../store/authStore";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
-  const { user, login, isLoading } = useAuthStore();
-
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const { user, isAuthenticated, login, isLoading } = useAuthStore();
 
   useEffect(() => {
-    if (user) {
-      if (user.role === "super_admin") {
-        return navigate("/dashboard");
+     if (isAuthenticated) { 
+        if(user?.role === 'super_admin') {
+          navigate("/dashboard")
+        } else {
+          navigate("/sell")
+        }
       }
-      navigate("/sell");
-    }
-  }, [user]);
+  }, [user, isAuthenticated])
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -89,13 +90,6 @@ const Login = () => {
             </div>
           </button>
         </form>
-        <Link
-          to={"/"}
-          className="text-primary flex items-center justify-center gap-x-2 text-center"
-        >
-          <ArrowLeft strokeWidth={1} />
-          <span>Retour au site</span>
-        </Link>
       </div>
     </div>
   );

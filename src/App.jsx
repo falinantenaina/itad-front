@@ -1,12 +1,14 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, useNavigate } from "react-router-dom";
 import Login from "./pages/Login";
 import { Unauthorized } from "./pages/Unauthorized";
 
+
 function App() {
+
   const router = createBrowserRouter([
     {
       path: "/login",
-      element: <Login />,
+      element: <Login />
     },
     {
       path: "/unauthorized",
