@@ -1,23 +1,22 @@
-import {Lock, LogIn, Mail } from "lucide-react";
-import { LoaderIcon } from "react-hot-toast";
-import logo from "../assets/logo.webp";
-import { useAuthStore } from "../store/authStore";
+import { Lock, Mail } from "lucide-react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/logo.webp";
+import Button from "../components/ui/Button";
+import { useAuthStore } from "../store/authStore";
 const Login = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { user, isAuthenticated, login, isLoading } = useAuthStore();
 
   useEffect(() => {
-     if (isAuthenticated) { 
-        if(user?.role === 'super_admin') {
-          navigate("/dashboard")
-        } else {
-          navigate("/sell")
-        }
+    if (isAuthenticated) {
+      if (user?.role === "super_admin") {
+        navigate("/dashboard");
+      } else {
+        navigate("/sell");
       }
-  }, [user, isAuthenticated])
-
+    }
+  }, [user, isAuthenticated]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -74,21 +73,9 @@ const Login = () => {
               />
             </div>
           </div>
-          <button className="btn w-full disabled:bg-card" disabled={isLoading}>
-            <div className="flex w-full items-center justify-center gap-x-2">
-              {isLoading ? (
-                <>
-                  <LoaderIcon />
-                  <span>Connexion...</span>
-                </>
-              ) : (
-                <>
-                  <LogIn />
-                  <span>Se connecter</span>
-                </>
-              )}
-            </div>
-          </button>
+          <Button isLoading={isLoading} className="w-full">
+            Se connecter
+          </Button>
         </form>
       </div>
     </div>
