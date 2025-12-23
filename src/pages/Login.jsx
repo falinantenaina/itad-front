@@ -27,7 +27,7 @@ const Login = () => {
 
   return (
     <div className="flex h-screen min-h-screen flex-col items-center px-8 md:justify-center">
-      <div className="w-full space-y-4 py-6 md:space-y-8">
+      <div className="w-full space-y-4 py-6 md:space-y-8 text-white">
         <div>
           <h1 className="flex items-center justify-center gap-x-1 lg:gap-x-4">
             <img src={logo} alt="Itad logo" className="size-10 md:size-15" />

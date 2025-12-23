@@ -20,7 +20,7 @@ const SellTicket = () => {
   } = useTicketStore();
 
   const [selectedPlan, setSelectedPlan] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("cash");
   const [customerData, setCustomerData] = useState({
     phoneNumber: "",
     customerEmail: "",
@@ -199,7 +199,7 @@ const SellTicket = () => {
 
       {/* Méthode de paiement */}
       {selectedPlan && (
-        <Card className="mb-8">
+        <Card className="mb-8 hidden">
           <h2 className="text-xl font-semibold mb-4">Méthode de paiement</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div
@@ -243,7 +243,7 @@ const SellTicket = () => {
 
       {/* Informations client (optionnel) */}
       {selectedPlan && paymentMethod && (
-        <Card className="mb-8">
+        <Card className="mb-8 hidden">
           <h2 className="text-xl font-semibold mb-4">
             Informations client (optionnel)
           </h2>
