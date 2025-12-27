@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import PageHeader from "../../components/layout/PageHeader";
 import Badge from "../../components/ui/Badge";
@@ -22,6 +23,7 @@ import { useCashierStore } from "../../store/cashierStore";
 import { usePOSStore } from "../../store/posStore";
 
 const Cashiers = () => {
+  const navigate = useNavigate();
   const { cashiers, fetchCashiers, createCashier, deleteCashier, isLoading } =
     useCashierStore();
   const { pointsOfSale, fetchPointsOfSale } = usePOSStore();
@@ -167,9 +169,9 @@ const Cashiers = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => {
-                            /* TODO: View stats */
-                          }}
+                          onClick={() =>
+                            navigate(`/cashiers/${cashier._id}/stats`)
+                          }
                         >
                           Statistiques
                         </Button>

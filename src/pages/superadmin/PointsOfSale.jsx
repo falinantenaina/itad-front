@@ -1,6 +1,7 @@
 import { MapPin, Plus, Server, Store, Trash2, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import PageHeader from "../../components/layout/PageHeader";
 import Badge from "../../components/ui/Badge";
@@ -12,6 +13,7 @@ import Modal from "../../components/ui/Modal";
 import { usePOSStore } from "../../store/posStore";
 
 const PointsOfSale = () => {
+  const navigate = useNavigate();
   const { pointsOfSale, fetchPointsOfSale, createPOS, deletePOS, isLoading } =
     usePOSStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -135,24 +137,24 @@ const PointsOfSale = () => {
               </div>
 
               <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => {
-                    /* TODO: View stats */
-                  }}
-                >
-                  <TrendingUp className="w-4 h-4" />
-                  Statistiques
-                </Button>
-                <Button
-                  variant="danger"
-                  size="sm"
-                  onClick={() => handleDelete(pos._id, pos.name)}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => navigate(`/pos/${pos._id}/stats`)}
+                  >
+                    <TrendingUp className="w-4 h-4" />
+                    Statistiques
+                  </Button>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => handleDelete(pos._id, pos.name)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             </Card>
           ))}

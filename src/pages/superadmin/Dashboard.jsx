@@ -5,7 +5,7 @@ import {
   ShoppingCart,
   TrendingUp,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import PageHeader from "../../components/layout/PageHeader";
@@ -24,38 +24,47 @@ const Dashboard = () => {
   const [period, setPeriod] = useState("day");
   const [selectedPOS, setSelectedPOS] = useState("");
 
-  const loadStats = async () => {
+  const loadStats = useCallback(async () => {
     try {
-      await fetchSalesStats({
-        period,
-        pointOfSaleId: selectedPOS || undefined,
-      });
+      const params = { period };
+
+      // Ajouter le filtre POS seulement s'il est sélectionné
+      if (selectedPOS && selectedPOS !== "") {
+        params.pointOfSaleId = selectedPOS;
+      }
+
+      console.log("Loading stats with params:", params);
+      await fetchSalesStats(params);
     } catch (error) {
+      console.error("Error loading stats:", error);
       toast.error("Erreur lors du chargement des statistiques");
     }
-  };
+  }, [period, selectedPOS, fetchSalesStats]);
 
-  const loadRecentSales = async () => {
+  const loadRecentSales = useCallback(async () => {
     try {
-      await fetchSalesHistory({
-        limit: 10,
-        pointOfSaleId: selectedPOS || undefined,
-      });
+      const params = { limit: 10 };
+
+      if (selectedPOS && selectedPOS !== "") {
+        params.pointOfSaleId = selectedPOS;
+      }
+
+      console.log("Loading sales with params:", params);
+      await fetchSalesHistory(params);
     } catch (error) {
+      console.error("Error loading sales:", error);
       toast.error("Erreur lors du chargement des ventes");
     }
-  };
+  }, [selectedPOS, fetchSalesHistory]);
 
   useEffect(() => {
     fetchPointsOfSale();
-    loadStats();
-    loadRecentSales();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [fetchPointsOfSale]);
 
   useEffect(() => {
     loadStats();
     loadRecentSales();
-  }, [period, selectedPOS]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [loadStats, loadRecentSales]);
 
   if (isLoading && !stats) {
     return (
@@ -107,7 +116,10 @@ const Dashboard = () => {
             })),
           ]}
           value={selectedPOS}
-          onChange={(e) => setSelectedPOS(e.target.value)}
+          onChange={(e) => {
+            console.log("POS changed to:", e.target.value);
+            setSelectedPOS(e.target.value);
+          }}
           className="w-64"
         />
       </div>
@@ -168,7 +180,6 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {/* Vérifier que sales existe et est un tableau */}
               {Array.isArray(sales) && sales.length > 0 ? (
                 sales.map((sale) => (
                   <tr key={sale._id} className="hover:bg-gray-50">
